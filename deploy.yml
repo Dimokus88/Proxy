@@ -1,0 +1,51 @@
+---
+version: "2.0"
+
+services:
+  app:
+    image: riftbit/3proxy
+    env:
+      - PROXY_LOGIN=USER
+      - PROXY_PASSWORD=PASSWORD
+    expose:
+      - port: 3128
+        as: 3128
+        to:
+          - global: true
+      - port: 1080
+        as: 1080
+        to:
+          - global: true
+      - port: 8080
+        as: 8080
+        to:
+          - global: true      
+     
+
+profiles:
+  compute:
+    app:
+      resources:
+        cpu:
+          units: 0.5
+        memory:
+          size: 512Mi
+        storage:
+          size: 512Mi
+  placement:
+    dcloud:
+      attributes:
+        host: akash
+      signedBy:
+        anyOf:
+          - "akash1365yvmc4s7awdyj3n2sav7xfx76adc6dnmlx63"
+      pricing:
+        app:
+          denom: uakt
+          amount: 100
+
+deployment:
+  app:
+    dcloud:
+      profile: app
+      count: 1
